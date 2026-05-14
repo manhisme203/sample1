@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Care Service</title>
+    <style>
+        body { margin: 0; font-family: Georgia, serif; background-color: #f9f9f9; }
+
+        /* ===== CÂU 1 – HEADER ===== */
+        .header-brand {
+            display: flex; gap: 20px;
+            background-color: #ffffff; padding: 10px; /* Đổi aliceblue thành trắng */
+            align-items: center;
+        }
+        .header-brand img { height: 50px; border-radius: 10px; }
+        .slogan { margin: 5px 0 0 0; color: #666; font-size: 16px; font-style: italic; }
+
+        .nav-container {
+            background-color: #2f63ff; color: #fff; /* Đổi màu nền sang xanh đậm trong đề */
+            padding: 10px 20px; display: flex; flex-wrap: wrap; gap: 20px;
+        }
+        .nav-item { cursor: pointer; padding: 5px 10px; font-weight: bold; }
+        .nav-item:hover { background-color: #2fcbff; border-radius: 4px; } /* Hover xanh nhạt trong đề */
+
+        section { padding: 20px; }
+
+        /* ===== CÂU 2 – ITEM & BANNER ===== */
+        .item {
+            width: 220px;
+            height: 280px;
+            background-color: #ffffff; /* Trắng */
+            border: 2px solid #ffe700; /* Đổi sang màu vàng trong đề */
+            border-radius: 12px;
+            padding: 16px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .item:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .item img { width: 100%; height: 130px; object-fit: cover; border-radius: 8px; }
+        .item h3 { font-size: 0.95rem; color: #2f63ff; margin: 8px 0 4px; } /* Đổi màu chữ heading sang xanh đậm */
+        .item p  { font-size: 0.82rem; color: #555; margin: 0 0 6px; } /* Xám */
+        .item strong { color: #00b253; font-size: 0.9rem; } /* Đổi màu giá sang xanh lá đậm */
+
+        .banner {
+            width: 100%; height: 200px;
+            border: 2px solid #2f63ff; background-color: #ffffff; color: #2f63ff; /* Sử dụng xanh đậm/trắng */
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-size: 24px; font-weight: bold;
+            transition: all 0.3s ease; text-align: center;
+            padding: 20px; margin-bottom: 30px; box-sizing: border-box;
+        }
+        .banner:hover {
+            background-color: #00b253; /* Xanh lá đậm */
+            border-color: #00e56b; /* Xanh lá nhạt */
+            color: white;
+            font-style: italic;   /* ← chữ chuyển sang in nghiêng khi hover */
+        }
+
+        /* ===== CÂU 3 + CÂU 5 ý 3 – FLEXBOX 1 HÀNG, CĂN GIỮA ===== */
+        .list-services {
+            display: flex;
+            flex-wrap: nowrap;          /* 1 hàng duy nhất */
+            justify-content: center;    /* căn giữa màn hình */
+            gap: 20px;
+            padding: 30px 20px;
+            overflow-x: auto;           /* cuộn ngang nếu màn hình nhỏ */
+        }
+
+        /* ===== CÂU 4 – FORM ===== */
+        .err-require, .err-name, .err-phone, .err-email {
+            color: #555; display: none; /* Dùng xám đậm thay cho đỏ (do đỏ không có trong đề) */
+            margin: 0 0 6px; font-size: 0.83rem; text-align: left;
+            font-weight: bold;
+        }
+        .form-container {
+            background-color: #eeeeee; /* Đổi aliceblue thành xám nhạt */
+            padding: 20px; width: 450px;
+            text-align: center; border-radius: 10px;
+        }
+        .form-container label {
+            display: block; text-align: left;
+            margin-bottom: 4px; font-weight: bold;
+        }
+        .form-container input,
+        .form-container select,
+        .form-container textarea {
+            width: 100%; box-sizing: border-box;
+            padding: 10px; margin-bottom: 4px;
+            border: 1px solid #ccc; border-radius: 5px; font-size: 0.95rem;
+        }
+        .form-container .field { margin-bottom: 12px; }
+        .success { color: #00b253; display: none; } /* Xanh lá đậm */
+        .btn-submit {
+            margin-top: 10px; padding: 10px 30px;
+            background-color: #ffe700; color: #000; /* Nền vàng, chữ đen */
+            border: none; border-radius: 5px;
+            transition: 0.3s ease; cursor: pointer; font-size: 1rem;
+        }
+        .btn-submit:hover { background-color: #00e56b; color: #fff; } /* Nền xanh lá nhạt khi hover */
+
+        /* Responsive form */
+        @media (max-width: 414px) {
+            .form-container { margin: 10px; width: calc(100% - 20px); }
+        }
+        @media (min-width: 415px) and (max-width: 1024px) {
+            .form-container { margin: 10px; padding: 25px; }
+        }
+        @media (min-width: 1025px) {
+            .form-container { margin: 10px; width: 400px; }
+        }
+
+        .form-center {
+            display: flex; justify-content: center;
+            align-items: center; padding: 40px 20px;
+        }
+
+        footer {
+            padding: 20px; text-align: center;
+            background-color: #eeeeee; margin-top: 20px; /* Đổi aliceblue thành xám nhạt */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== CÂU 1: HEADER + NAV ===== -->
+    <header>
+        <div class="header-brand">
+            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=100&h=100&fit=crop" alt="Pet Care Logo">
+            <div>
+                <h1 style="margin:0;">Pet Care Service</h1>
+                <p class="slogan">Yêu thương thú cưng – Tận tâm chăm sóc</p>
+            </div>
+        </div>
+        <nav class="nav-container">
+            <div class="nav-item">Trang chủ</div>
+            <div class="nav-item">Giới thiệu</div>
+            <div class="nav-item">Dịch vụ</div>
+            <div class="nav-item">Đặt lịch</div>
+            <div class="nav-item">Liên hệ</div>
+        </nav>
+    </header>
+
+    <section>
+        <h1>Giới thiệu chung</h1>
+        <h2>Cắt tỉa lông thú cưng</h2>
+        <img height="150px"
+            src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=300&fit=crop"
+            alt="Cắt tỉa lông thú cưng">
+        <p>Thú cưng của bạn sẽ được chuyên gia tạo kiểu lông</p>
+        <strong>Giá: 150.000đ</strong>
+    </section>
+
+    <!-- ===== CÂU 2: 4 ITEM + 1 BANNER ===== -->
+    <div class="item-static-wrap" style="padding: 10px;">
+        <!-- Cập nhật màu inline style theo đề -->
+        <div style="background:#ffe700;height:100px;margin-bottom:10px;"></div>
+        <div style="background:#ffe700;height:100px;margin-bottom:10px;"></div>
+        <div style="background:#ffe700;height:100px;margin-bottom:10px;"></div>
+        <div style="background:#ffe700;height:100px;margin-bottom:10px;"></div>
+    </div>
+    <div class="banner">🐾 KHUYẾN MÃI MÙA HÈ – GIẢM SÂU 30%</div>
+
+    <!-- ===== CÂU 3 + CÂU 5 ý 3: 4 dịch vụ flexbox 1 hàng, căn giữa, dùng class .item ===== -->
+    <div class="list-services"></div>
+
+    <!-- ===== CÂU 4: FORM ĐĂNG KÝ ===== -->
+    <div class="form-center">
+        <form class="form-container">
+            <h1>Đăng ký dịch vụ</h1>
+            <hr>
+            <div class="field">
+                <label for="name">Họ tên</label>
+                <input id="name" type="text" placeholder="Nhập họ và tên..">
+                <p class="err-name">Vui lòng nhập tên</p>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email" type="text" placeholder="Nhập email..">
+                <p class="err-email">Email không hợp lệ</p>
+            </div>
+            <div class="field">
+                <label for="phone">Số điện thoại</label>
+                <input id="phone" type="text" placeholder="Nhập số điện thoại..">
+                <p class="err-phone">Số điện thoại không hợp lệ</p>
+            </div>
+            <div class="field">
+                <label for="type-pet">Loại thú cưng</label>
+                <select id="type-pet">
+                    <option value="cho">Chó</option>
+                    <option value="meo">Mèo</option>
+                    <option value="chim">Chim</option>
+                    <option value="chuot">Chuột</option>
+                </select>
+            </div>
+            
+            <div class="field">
+                <label for="require">Mô tả</label>
+                <textarea id="require" placeholder="Mô tả chi tiết yêu cầu.."></textarea>
+                <p class="err-require">Vui lòng nhập mô tả</p>
+            </div>
+            <div class="success"><h2>Đăng ký thành công! 🎉</h2></div>
+            <button class="btn-submit" type="submit">Đăng ký</button>
+        </form>
+    </div>
+
+    <footer>
+        <h2>Tran Duc Manh</h2>
+        <strong>11243985</strong>
+    </footer>
+
+    <script>
+        // ===== CÂU 3: JSON 4 dịch vụ thú cưng =====
+        let services = [
+            {
+                name: "Cắt tỉa lông chó",
+                image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400&h=300&fit=crop",
+                title: "Chuyên gia tạo kiểu lông cho chó",
+                price: "150.000đ"
+            },
+            {
+                name: "Cắt tỉa lông mèo",
+                image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=400&h=300&fit=crop",
+                title: "Chuyên gia tạo kiểu lông cho mèo",
+                price: "150.000đ"
+            },
+            {
+                name: "Cắt tỉa lông chim",
+                image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400&h=300&fit=crop",
+                title: "Chuyên gia chăm sóc lông vũ cho chim",
+                price: "100.000đ"
+            },
+            {
+                name: "Tắm & vệ sinh chuột",
+                image: "https://images.unsplash.com/photo-1548681528-6a5c45b66063?w=400&h=300&fit=crop",
+                title: "Dịch vụ tắm sạch & vệ sinh chuột hamster",
+                price: "80.000đ"
+            }
+        ];
+
+        // ===== CÂU 5 ý 3: vòng lặp while + class .item + flexbox 1 hàng căn giữa =====
+        const list = document.querySelector('.list-services');
+        var i = 0;
+        var html = "";
+        while (i < services.length) {
+            html += `
+                <div class="item">
+                    <img src="${services[i].image}" alt="${services[i].name}">
+                    <h3>${services[i].name}</h3>
+                    <p>${services[i].title}</p>
+                    <strong>Giá: ${services[i].price}</strong>
+                </div>
+            `;
+            i++;
+        }
+        list.innerHTML = html;
+
+        // ===== CÂU 4: Validation form =====
+        const form = document.querySelector('.form-container');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name    = document.getElementById('name').value.trim();
+            const email   = document.getElementById('email').value.trim();
+            const phone   = document.getElementById('phone').value.trim();
+            const require = document.getElementById('require').value.trim();
+
+            let isValidate = true;  // chỉ gán false khi lỗi, không gán true trong else
+
+            if (name === "") {
+                document.querySelector('.err-name').style.display = "block";
+                isValidate = false;
+            } else {
+                document.querySelector('.err-name').style.display = "none";
+            }
+
+            if (require === "") {
+                document.querySelector('.err-require').style.display = "block";
+                isValidate = false;
+            } else {
+                document.querySelector('.err-require').style.display = "none";
+            }
+
+            const validateEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-z]{2,}$/;
+            if (!validateEmail.test(email)) {
+                document.querySelector('.err-email').style.display = "block";
+                isValidate = false;
+            } else {
+                document.querySelector('.err-email').style.display = "none";
+            }
+
+            const validatePhone = /^[0-9]{10,}$/;
+            if (!validatePhone.test(phone)) {
+                document.querySelector('.err-phone').style.display = "block";
+                isValidate = false;
+            } else {
+                document.querySelector('.err-phone').style.display = "none";
+            }
+
+            document.querySelector('.success').style.display = isValidate ? "block" : "none";
+        });
+    </script>
+
+</body>
+</html>
